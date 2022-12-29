@@ -1,100 +1,116 @@
-alert("Bienvenido al calculador de promedios")
 
-let numAlumnos = 0
-let matematica = { nombre: "matematica", alumnos: [] }
-let lengua = { nombre: "lengua", alumnos: [] }
-let historia = { nombre: "historia", alumnos: [] }
-let biologia = { nombre: "biologia", alumnos: [] }
+let matematica = { materia: "Matematica", alumnos: [] }
+let lengua = { materia: "Lengua", alumnos: [] }
+let historia = { materia: "Historia", alumnos: [] }
+let biologia = { materia: "Biologia", alumnos: [] }
 let materias = [matematica, lengua, biologia, historia]
-let opcion
-let menuDos = 0
-let promedio = 0
+let promedio
 let aprobados = []
 let desaprobados = []
+let opcion = ""
+let modal = document.getElementById("myModal");
+let span = document.getElementsByClassName("close")[0];
+let contenedorMaterias = document.getElementById("contenedorMaterias")
 
+for (const materia of materias) {
+    contenedorMaterias.innerHTML = contenedorMaterias.innerHTML + `<div class="divMaterias"><button id="${materia.materia}" class="botonMaterias">${materia.materia}</button></div>`
 
-opcion = Number(prompt("Ingrese la materia a la que cargara notas, siendo: \n1.Matematica \n2.Lengua \n3.Biologia \n4.Historia \n5.Salir"))
-switch (opcion) {
-    case 1:
-        numAlumnos = Number(prompt("Ingrese la cantidad de alumnos en el curso"))
-        carga("matematica")
-        break;
-    case 2:
-        numAlumnos = Number(prompt("Ingrese la cantidad de alumnos en el curso"))
-        carga("lengua")
-        break;
+}
+contenedorMaterias.addEventListener("click", e => { llamarMateria(e.target.innerText) })
 
-    case 3:
-        numAlumnos = Number(prompt("Ingrese la cantidad de alumnos en el curso"))
-        carga("biologia")
-
-        break;
-    case 4:
-        numAlumnos = Number(prompt("Ingrese la cantidad de alumnos en el curso"))
-        carga("historia")
-
-        break;
-
-    default:
-        alert("la opcion seleccionada no es valida")
-        break;
+function llamarMateria(seleccion) {
+    modal.style.display = "block";
+    opcion = seleccion
 }
 
-
-
-function carga(tema) {
-    for (let i = 0; i < numAlumnos; i++) {
-        let nombre = prompt("Ingrese el nombre del alumno")
-        let apellido = prompt("Ingrese el apellido del alumno")
-        do {
-            notaTeorica = Number(prompt("Ingrese la nota Teorica del alumno " + apellido))
-        } while (notaTeorica < 0 || notaTeorica > 10);
-        do {
-            notaPractica = Number(prompt("Ingrese la nota Practica del alumno " + apellido))
-        } while (notaPractica < 0 || notaPractica > 10);
-        do {
-            notaConcepto = Number(prompt("Ingrese la nota Conceptual del alumno " + apellido))
-        } while (notaConcepto < 0 || notaConcepto > 10);
-
-        promedio = ((notaTeorica + notaPractica + notaConcepto) / 3).toFixed(1)
-
-        alumno = { nombre: apellido, nota: promedio }
-
-        if (promedio >= 7) {
-            aprobados.push(alumno)
-        } else {
-            desaprobados.push(alumno)
-        }
-
-        materias.find(e => e.nombre === tema).alumnos.push({ nombre: nombre, apellido: apellido, notaTeorica: notaTeorica, notaPractica: notaPractica, notaConcepto: notaConcepto })
-
+function cargar() {
+    nombre = document.getElementById("inputNombre").value;
+    apellido = document.getElementById("inputApellido").value;
+    notaTeorica = document.getElementById("inputTeorica").value;
+    notaPractica = document.getElementById("inputPractica").value;
+    notaConceptual = document.getElementById("inputConceptual").value;
+    teorica = parseFloat(notaTeorica)
+    practica = parseFloat(notaPractica)
+    conceptual = parseFloat(notaConceptual)
+    materias.find(e => e.materia === opcion).alumnos.push({ nombre: nombre, apellido: apellido, notaTeorica: notaTeorica, notaPractica: notaPractica, notaConceptual: notaConceptual })
+    promedio = ((teorica + practica + conceptual) / 3).toFixed(1)
+    alumno = { nombre: apellido, nota: promedio }
+    if (promedio >= 7) {
+        aprobados.push(alumno)
+    } else {
+        desaprobados.push(alumno)
     }
+
+    limpiar()
+
+}
+span.onclick = function () {
+    modal.style.display = "none";
+}
+console.log(materias)
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+localStorage.setItem(`historial`, JSON.stringify(materias));
+
+function limpiar() {
+    document.getElementById("inputNombre").value = ""
+    document.getElementById("inputApellido").value = ""
+    document.getElementById("inputTeorica").value = ""
+    document.getElementById("inputPractica").value = ""
+    document.getElementById("inputConceptual").value = ""
+    promedio = 0
+
+}
+
+let botonResultados = document.getElementById("botonResultados")
+let botonDesaprobados = document.getElementById("botonDesaprobados")
+
+botonResultados.addEventListener("click", mostrarResultados)
+botonDesaprobados.addEventListener("click", mostrarDesaprobados)
+
+let notafinal = ""
+let resultado = document.createElement("div")
+
+
+let listado = document.getElementById("listadoNotas")
+listado.innerHTML = `<button id=botonLista>Obtener Listado</button>`
+let botonHistorial = document.getElementById("botonLista")
+botonHistorial.addEventListener("click", mostrarHistorial)
+
+
+function mostrarHistorial() {
+    let recuperarHistorial = JSON.parse(localStorage.getItem(`historial`))
+    console.log("=>", recuperarHistorial)
+    //    recuperarHistorial.forEach(detalle => {
+    //     console.log(detalle)
+    //     resultado.innerHTML=`<div class="listaHistorial"><p>${detalle.materia}</p></div> `
+    //     detalle.alumnos.forEach(alumno => {
+    //         resultado.innerHTML=`<div class="listaHistorial"><p>${alumno.nombre}</p></div> `
+    //     });
+    //    });
+
+    document.body.append(resultado)
+
+}
+
+function mostrarResultados() {
+
+    notaFinal = "Los alumnos aprobados son: "
+    aprobados.forEach((aprobado) => {
+        notaFinal = notaFinal + "<br>" + aprobado.nombre + " con " + aprobado.nota
+        resultado.innerHTML = `<p class="divNotaFinalA">${notaFinal}</p>`
+    })
+    document.body.append(resultado)
+}
+
+function mostrarDesaprobados() {
+    notaFinal = "Los alumnos desaprobados son: "
+    desaprobados.forEach((desaprobado) => {
+        notaFinal = notaFinal + "<br>" + desaprobado.nombre + " con " + desaprobado.nota
+        resultado.innerHTML = `<p class="divNotaFinalB">${notaFinal}</p>`
+    })
+    document.body.append(resultado)
 }
 
 
-let notaFinal = "Los alumnos aprobados son: "
-
-aprobados.forEach((aprobado) => {
-    notaFinal = notaFinal +"\n"+ aprobado.nombre + " con " + aprobado.nota
-
-})
-
-notaFinal = notaFinal + "\nLos alumnos desaprobados son: "
-
-desaprobados.forEach((desaprobado) => {
-    notaFinal = notaFinal+"\n" + desaprobado.nombre + " con " + desaprobado.nota
-
-})
-
-alert(notaFinal)
 
 
-function porcentaje(parametro, num) {
-    cantidad = parametro.length
-    return ((cantidad * 100) / num).toFixed(1)
-}
-
-alert("El porcentaje de aprobados es " + porcentaje(aprobados, numAlumnos)+ "%")
-alert("El porcentaje de desaprobados es " + porcentaje(desaprobados, numAlumnos)+ "%")
-
-alert("Gracias por utilizar nuestro calculador de promedio, hasta pronto")

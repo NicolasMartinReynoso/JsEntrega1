@@ -1,12 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="./estilos/style.css">
 </head>
+
 <body>
+    <div class="tituloInicio">
+        <h1>¡Bienvenido al calculador de promedios!</h1>
+    </div>
+
+    <div id="contenedorMaterias">
+
+    </div>
+
+    <div id="myModal" class="modal">
+
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            
+            <div class="formulario">
+                
+                <input id="inputNombre" type="text" placeholder="Nombre"  value="">
+                <input id="inputApellido" type="text" placeholder="Apellido" value="">
+                <input id="inputPractica" type="number" placeholder="Nota Practica" value="">
+                <input id="inputTeorica" type="number" placeholder="Nota Teorica" value="">
+                <input id="inputConceptual" type="number" placeholder="Nota Conceptual" value="">
+                <button onclick="cargar()" type="submit">Cargar</button>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="divResultados">
+        <button id="botonResultados">Resultados</button>
+        <button id="botonDesaprobados">Desaprobados</button>
+    </div>
+
+    <div id="listadoNotas"><button id=botonLista>Obtener Listado</button></div>
+
     <script src="./miarchivo.js"></script>
 </body>
+
 </html>
