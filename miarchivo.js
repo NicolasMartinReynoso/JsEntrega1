@@ -41,15 +41,16 @@ function cargar() {
         desaprobados.push(alumno)
     }
 
+    localStorage.setItem(`historial`, JSON.stringify(materias));
+
     limpiar()
 
 }
 span.onclick = function () {
     modal.style.display = "none";
 }
-console.log(materias)
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-localStorage.setItem(`historial`, JSON.stringify(materias));
+
+
 
 function limpiar() {
     document.getElementById("inputNombre").value = ""
@@ -79,17 +80,13 @@ botonHistorial.addEventListener("click", mostrarHistorial)
 
 function mostrarHistorial() {
     let recuperarHistorial = JSON.parse(localStorage.getItem(`historial`))
-    console.log("=>", recuperarHistorial)
-    //    recuperarHistorial.forEach(detalle => {
-    //     console.log(detalle)
-    //     resultado.innerHTML=`<div class="listaHistorial"><p>${detalle.materia}</p></div> `
-    //     detalle.alumnos.forEach(alumno => {
-    //         resultado.innerHTML=`<div class="listaHistorial"><p>${alumno.nombre}</p></div> `
-    //     });
-    //    });
-
-    document.body.append(resultado)
-
+    recuperarHistorial.forEach(detalle => {
+        resultado.innerHTML = resultado.innerHTML+ `<div class="listaHistorial"><p>${detalle.materia}</p></div> `
+        detalle.alumnos.forEach(alumno => {
+            resultado.innerHTML = resultado.innerHTML + `<p class="listaHistorialNotas">${alumno.nombre} ${alumno.apellido} ${alumno.notaTeorica} ${alumno.notaPractica} ${alumno.notaConceptual}</p>`
+        });
+        document.body.append(resultado)
+    });
 }
 
 function mostrarResultados() {
